@@ -1,0 +1,73 @@
+<script>
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            friends: []
+        }
+    },
+    mounted() {
+        this.loadFriends();
+    },
+    methods: {
+        async loadFriends() {
+            let response = await axios('/users');
+            this.friends = response.data;
+        },
+        
+        user(item) {
+            this.$router.push({
+                name: 'user',
+                params: {
+                    username: item.username,
+                }
+            })
+        }
+
+    }
+}
+</script>
+
+
+<template>
+    <div class="friends-page">
+        <h3>Друзья</h3>
+
+        <ul class="list-group my-3">
+            <li v-for="(item, index) in friends"
+                class="list-group-item friend" @click="user(item)">
+                <img :src="'src/avatars/' + item.avatar">
+                <div class="username">
+                    {{ item.firstName }} {{ item.lastName }}
+                </div>
+                
+            </li>
+        </ul>
+    </div>
+</template>
+
+
+<style>
+.friends-page img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+    border: 1px solid #6c757d;
+}
+
+.friends-page .friend {
+    cursor: pointer;
+    height: 100px;
+    
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.friends-page .username {
+    font-weight: bold;
+}
+</style>
